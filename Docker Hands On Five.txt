@@ -1,0 +1,27 @@
+The previous example of Dockerfile,  you can do with environment variables.  Define three env variable val1, val2 & val3 and call these variables in your code.
+
+myubuntu@myubuntu-VirtualBox:~$ mkdir abc
+myubuntu@myubuntu-VirtualBox:~$ cd abc
+myubuntu@myubuntu-VirtualBox:~/abc$ gedit Dockerfile
+myubuntu@myubuntu-VirtualBox:~/abc$ cat Dockerfile
+FROM ubuntu
+ENV val1=abc/email
+ENV val2="apt-get update"
+ENV val3="Hi, This is Pankaj Pandey from Edureka!"
+MAINTAINER $val1
+RUN $val2
+CMD echo $val3
+myubuntu@myubuntu-VirtualBox:~/abc$ docker build -t Envimage .
+
+3) you can also name to that container
+sudo docker run --name (any container name) -it image-name  (this will go within the container.  Just press EXIT)
+sudo docker PS  (Get container id)
+Now time to commit and push changes to dockerhub
+sudo docker commit -m "ubuntu" -a "author name" container-id dockerhubid/user defined name of image in dockerhub
+
+Then enter command "sudo docker login" and provide information about dockerhub cretaintials
+
+finally push your image to dockerhub by command sudo docker push pankajdtrainer/user defined name of image
+go to dockerhub and see the presence of the image.
+
+now run the command "sudo docker run pankajdttainer/user defined name of image.

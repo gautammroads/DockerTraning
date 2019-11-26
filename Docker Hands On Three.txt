@@ -1,0 +1,35 @@
+Hands On -THREE
+
+- In this example we will us httpd(This image only contains Apache httpd with the defaults from upstream.
+There is no PHP installed, but it should not be hard to extend.  The Apache HTTP Server, colloquially called Apache,
+is a Web server application notable for playing a key role in the initial growth of the World Wide Web.)
+- It has mininum set of libraries to run an OS with Apache installation
+
+-- sudo docker run -it -p 80:80 -d httpd
+
+-it means interactive mode
+-p means port. 80 is for my local port.  80 is the server mode
+-d means ditatched mode or run it at the backround.
+
+Go to the localhost:80 or to the IP address of the machine. you could see the message "It Works!". It can be accessed from different machines, different browsers. It Works!
+
+Not time to go the container by following command
+
+-- sudo docker exec -it containe-id(e.g 4bba8c648f59) bash
+
+Once inside the container, type ls.  this will give you all the list of folders inside that container.
+Your website is inside htdocs.  So do cd htdocs.  and then ls. You could see index.html file is present there.
+try to edit this file with nano command. You will get error message "bash: nano: command not found". WHY?
+Thats because httpd is has mininum set of libraries to run an OS on top of Apache installation.
+
+So, we need to manually install nano editor.  So, first do apt-get update and install nano by
+-- apt-get install nano in the container.
+now if you do nano index.html, you could edit that file that has message "it Works!" to "Something Else Works!".  Now change it to something else.
+
+Control+x and y.
+
+Open your localhost:80 or the External IP on the same tab where GCP is open or to any other browser.  You could see you will get a new message that you typed.
+Now do sudo docker stop 4bba8c648f59.  You can not access the service by the ip address now.  You can start the conainer again by sudo docker start 4bba8c648f59.
+
+Finally Remove Container:
+- sudo docker rm 4bba8c648f59 - to remove the container. 

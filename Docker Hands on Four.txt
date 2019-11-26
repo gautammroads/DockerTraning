@@ -1,0 +1,32 @@
+Hands ON - FOUR
+Now commands for creating a docker file, creating an image from that finally the container
+mkdir abc
+cd abc
+gedit file-name (to create a file within that directory)
+rm file-name(commands to learn remove files)
+rmdir folder-name(commands to learn remove files)
+
+
+
+
+2) Now create another folder by mkdir command and then create a Dockerfile inside it.  Now add following lines into that.
+# difference between RUN and CMD is that RUN gets executed during building of the image.  
+# However, with CMD you can print the messases on cansole and it gets(message inside it) executed when you create a container out of that image.
+FROM ubuntu
+MAINTAINER edureka/email (maintainer is paase' now)
+LABEL edureka/email (LABEL provided metadata of docker images)
+RUN apt-get update
+CMD echo "Hi, This is Pankaj Pandey from Edureka!"
+
+You can run "cat Dockerfile" command to check whats inside the Dockerfile
+You can run sudo docker inspect image-id
+
+Now within folder run command
+docker build -t userdefind imagename .    (space and dot is must and this will build a docker image) or if you want to add tag then
+docker build -t imagename:1.0 .    (if you want to add tag to your image then add :1.0 with image name)
+
+after execution you will get a message that successfully build (image nubmer like a663d23ds325)
+"sudo docker images" command will give you details about the image you created.  Now time to run your image by command
+
+"sudo docker run a663d23ds325"  where a663d23ds325(example image id) is the image id.  This will give you output as
+Hi, This is Pankaj Pandey from Edureka!

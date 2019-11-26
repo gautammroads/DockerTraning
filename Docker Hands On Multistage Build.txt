@@ -1,0 +1,39 @@
+Step One:  Normal Build
+Make a Directory and create & Build a Dockerfile in it with the following code.
+############################################################
+FROM ubuntu:18.04
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends gcc build-essential
+
+WORKDIR /root
+COPY . hello.c 
+RUN mkdir -p helloworld hello.c
+CMD ["./helloworld"]
+
+############################################################
+Now notice the size of this image by running following command
+sudo docker images | grep 0f9649ce87e0 (Image ID from above code)
+
+Step Two: MultiStage Builds
+Make a Directory and create & Build a Dockerfile in it with the following code.
+
+#############################################################
+
+# This is the first image:
+FROM ubuntu:18.04 AS compile-image
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends gcc build-essential
+WORKDIR /root
+COPY . hello.c
+RUN mkdir -p helloworld hello.c
+# This is the second and final image; it copies the compiled binary
+# over but starts from the base ubuntu:18.04 image.
+
+FROM ubuntu:18.04 AS runtime-image
+
+COPY --from=compile-image /root/helloworld .
+CMD ["./helloworld"]
+
+##################################################
+Now notice the size of this image by running following command
+sudo docker images | grep 0f9756cefd6e (Image id from above code)

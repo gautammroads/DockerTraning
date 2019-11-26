@@ -1,0 +1,16 @@
+******************************************************************************************
+Hands On - TWO
+
+Taggging
+sudo docker pull ubuntu:16.04 (Tagging)
+docker container ls
+docker container ls -all
+docker run -it ubuntu  (You are now inside container.  Over here you can run different commands like apt-get update.  This will change image by version)
+
+sudo docker container ls -all (will give you details about you the ubuntu container)
+Now if you want to save these changes as an image then COMMIT the changes and push to docker hub.
+psudodor commit -m "did an apt-get update" -a "author name" container-id dockerhubrepository/new image name
+docker login (enter credentials for docker hub)
+docker push dockerhubrepository/new image name
+Go to docker hub and check you image
+********************************************************************************************
