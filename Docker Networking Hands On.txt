@@ -1,0 +1,26 @@
+
+Docker Networking commands
+sudo docker network ls (This gives you list of availale default networks) 
+sudo docker run -itd --name=alpine1 alpine  (Alpine Linux is an independent, non-commercial, general purpose Linux distribution designed for power users 
+who appreciate security, simplicity and resource efficiency.)
+sudo docker ps
+when we spin up any container on docker host, that gets linked to a bridge network. Lets check that by following command
+sudo docker network inspect network-id(bridge network id that you can get by running command sudo docker network ls). You could see container is linked to this bridge
+Now lets create another container and ping conainer alpine1 from that in bridge
+sudo docker run -itd --name=alpine2 alpine 
+check status by sudo docker ps
+sudo docker network inspect network-id
+Then you could see two containers joined the default bridge.  You could see diffrent ip addresses are assigned to these containers. 
+Now time to ping from alpine1 to alpine2 in the bridge
+sudo docker attach alpine1 (you will be within container)
+run command ping ip-address of alpine2. you could see these containers are talking to each other with the help of id addresses. In default bridge network, 
+containers talk to each other by ip address only.  Ctrl + C to stop the communication b/t two containers. Then enter Exit to come out from container
+Then run command sudo docker rm -f $(docker ps -a-q) to forcefully remove all the containers running/non-running. 
+***************
+Now instead of using default bridge lets create a customised bridge javahome(user defined)
+First create a network by command - sudo docker network create --driver=bridge mytestbridge
+By running command sudo docker network ls, you could see one additional network is created
+now run command sudo docker run -itd --name=alpine1 --network=mytestbridge alpine
+now inspect the bridge to check if container is joined the network or not by command sudo docker network inspect mytestbridge
+now spin another container alpine2 to your bridge by sudo docker run -itd --name=alpine1 --network=mytestbridge alpine
+then sudo docker attach alpine1 and then try to ping container2 by name & ip-address and see what happens
