@@ -1,0 +1,9 @@
+mkdir nginxtest
+cd nginxtest
+gedit docker-compose.yml and write your code for running two containers
+just do docker-compose config to check the validity of your file.  If there is any error, it will show on the console it self
+run command sudo docker-compose up -d (-d means docker daemon.  It will leave your application running untill you decide to stop it)
+check your running containers by running sudo docker ps
+go to your port and check if nginx is available or not
+Now time to stop running applications by command sudo docker-compose stop or docker-compose down. Check status of containers by sudo docker ps
+now remove all stopped containers by command sudo docker-compose rm -f
