@@ -1,0 +1,18 @@
+# While running a container, all the data of that container is stored in that container if you dont mention any location.  If we delete that container, all related 
+data will be removed.  However, if you still want to keep that data for deleted containers, we use volume for that.)
+
+- sudo docker volume create myjenkins  (You are creating a volume by the name of myjenkins)
+- sudo docker volume ls   (If you want to list all the volumes)
+- sudo docker inspect myjenkins (Run this command to inspect your volume)
+- sudo docker volume rm myjenkins  (Run this command only if you want to remove any volume. "sudo docker volume prune" command can be used to remove unused local volume)
+- sudo docker run --name MyJenkins1 -p 8080:8080 -p 50000:50000 -v myjenkins:/var/jenkins_home jenkins
+in above command first we are naming the container as Myjenkins1 then we are using -p is exposing 8989 local port from 8080 server port. 
+for APIs we are using 50000 local from 50000 server port. jenkins is the name of the image which will be pulled from Registry. 
+
+Open localhost 8989 and create a jenkins job. 
+
+FYI Only: (You can also run above command as following just in case if you dont want to use Volumes
+- sudo docker run -p 8989:8080 -p 50000:50000 jenkins)
+
+You can also run previous command by changing container name and local port numbers.  However, keep volumes as it is.  Now again open localhost for jenkins and check what you get
+- sudo docker run --name MyJenkins2 -p 8080:8080 -p 50000:50000 -v myjenkins:/var/jenkins_home jenkins
