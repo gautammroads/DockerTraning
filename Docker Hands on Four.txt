@@ -6,8 +6,14 @@ gedit file-name (to create a file within that directory)
 rm file-name(commands to learn remove files)
 rmdir folder-name(commands to learn remove files)
 
+1) create a folder by mkdir command and then create a Dockerfile inside it.  Add following message into that.
+# getting base image from ubuntu
+# if you want to build an image from scratch use FROM scratch(image in docker-hub)
+FROM ubuntu
+CMD echo "Hi, This is Pankaj Pandey from Edureka!"
 
-
+Now within folder run command
+docker build -t user-defind-imagename .    (space and dot is must and this will build a docker image)
 
 2) Now create another folder by mkdir command and then create a Dockerfile inside it.  Now add following lines into that.
 # difference between RUN and CMD is that RUN gets executed during building of the image.  

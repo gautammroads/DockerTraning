@@ -1,0 +1,14 @@
+
+1) Just do Docker git clone https://github.com/dockersamples/example-voting-app
+
+https://github.com/dockersamples/example-voting-app
+
+2) cd example-voting-app and do ls.  You could see too many files inside it
+
+3) from the folder run following command
+
+sudo docker stack deploy --compose-file docker-stack.yml vote
+
+4) cd
+
+5) sudo docker service ls

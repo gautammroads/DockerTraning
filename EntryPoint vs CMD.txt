@@ -1,0 +1,39 @@
+Both CMD & ENTRYPOINT get executed while Runtime.  ENTRYPOINT overrides CMD commands
+
+1) create a folder by mkdir command and then create a Dockerfile inside it.  Add following message into that.
+# This file has been created to understand differences b/w Entrypoint & CMD
+FROM ubuntu
+CMD echo "Hi, This is Pankaj Pandey from Delhi, India!"
+
+Now within folder run command
+docker build -t user-defind-imagename . 
+
+Now run command with the image created from the above build.
+
+- sudo docker run -it image-id from the previous build
+  notice the output.
+
+Next run following command
+
+- sudo docker run -it image-id echo "Hi, This is Pankaj Pandey from Pune, India!"  
+  By running this command you could see that CMD is overridden while running a container
+
+- Next add multiple CMDs in your Dockerfile with some other messages.  Build your image again and run it again. You will notice you won't get any error,
+  However, only last CMD will print the message
+
+- Now Change your Dockerfile with ENTRYPOINT instructions
+FROM ubuntu
+ENTRYPOINT echo "Hi, This is Pankaj Pandey from Delhi, India!"
+
+- And repeat previous steps and notice outputs.  Also notice your outputs if you mention both Entrypoint & CMD or Multiple Entrypoint & CMDs e.g.
+FROM ubuntu
+ENTRYPOINT echo "Hi, This is Pankaj Pandey from Delhi, India!"
+CMD echo "Hi, This is Pankaj Pandey from NewYork, US!"
+
+- We can also use both CMD & ENTRYPOINT in Dockerfile as mentioned below:
+FROM ubuntu
+ENTRYPOINT ["echo"]
+CMD ["Hi, This is Pankaj Pandey from Delhi, India!"]
+
+Now try to override above container image while runtime and notice the output. 
+
