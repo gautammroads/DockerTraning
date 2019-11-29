@@ -1,0 +1,42 @@
+- mkdir kubernetes
+- cd kubernetes
+- vi mypod.yml
+start with to writing Kubernetes yaml file
+a
+k
+m
+s
+
+-a apiVersion  (two apiversions are used v1 & extensions/v1beta1 majorly used in kubernetes)
+-k kind  (Pod, Deployment, Service etc)
+-m metadata (metadata will have container details, names, label etc)
+-s spec (container level detailed information)
+
+So, a,k & m gives info about the POD and s gives info about the container
+
+Detailed Code is:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  labels:
+    anything: whatever
+    version: whatevr
+spec:
+  containers:
+  - name: my-container
+    image: nginx
+    ports:
+    - containerPort: 80
+
+if you want multiple containers add more containers in "spec"
+
+How to create POD:
+- kubectl create -f mypod.yml - command to create new port.
+- kubectl get pods - will give details about that pod
+- kubectl describe pods
+- kubectl describe pod my-pod  my-pod(is name mentioned inside metadata)
+This will give you all the details about that POD.  At the bottom you could see what happened at the backend.
+Also go to your workloads in GCP Kubernetes Engine or to your Dashboard-PODS,you can see describe details over there as well.(in GUI Format)
+

@@ -1,0 +1,153 @@
+SERVICE:
+How to create SERVICE.  Service basically defines your networking rules/port exposer and where you want to implement that.
+Service Discovery: Happens with the help of labels.  Three types of
+ClusterIP : Exposes the Service on a cluster-internal IP. It works like a load balancer inside the cluster and resposible for internal communication.
+NodePort : Exposes the Service on each Node's IP at a static port (the NodePort ). ...
+LoadBalancer : Exposes the Service externally using a cloud provider's load balancer.
+
+
+Service Discovery: Happens with the help of labels.   app: my-app is the label name that we got from the previous deployment
+In production, labels are defind as env:prod/dev/test/sit or application: frontend/backend etc etc
+
+-cd kubernetes
+- vi clusterIP.yml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  type: ClusterIP
+  selector:
+    app: my-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+
+
+likewise you can expose multiple ports by adding following lines of code.
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 9377
+
+- kubectl create -f clusterIP.yml
+- kubectl get services
+
+
+clusterIP service is internal service to kubernetes Clusert and can not be exposed.  Created just for the understanding
+NodePort service can be accessed via all the nodes of the nodes.  Also kubernetes ports can be exposed in a range(30000 to 32767)
+
+Now delete clusterIP service & create NodePort service.
+- kubectl delete service my-service
+- kubectl get services (your service is not there)
+
+
+- vi nodePort.yml
+
+write following code
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  type: NodePort
+  selector:
+    app: my-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      nodePort: 31000
+      targetPort: 80
+
+- kubectl create -f nodePort.yml
+- kubectl get services
+- kubectl describe service my-service
+you could see following details.
+Name:                     my-service
+Namespace:                default
+Labels:                   <none>  (no lable for service)
+Annotations:              <none>
+Selector:                 app=my-app
+Type:                     NodePort
+IP:                       10.11.246.159
+Port:                     http  80/TCP
+TargetPort:               80/TCP
+NodePort:                 http  31000/TCP
+Endpoints:                10.8.1.5:80,10.8.2.3:80,10.8.2.4:80 + 2 more...  (this explains to how many pods this service is exposed to)
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+
+Now as this service is available on all the nodes. And if I copy external ip address of any of my node and add 31000, it will give me timeout.
+So, services are exposed to the cluster.  However not to external world.  As cloud firewalls doesnot allow incoming traffic for that at 31000.
+So, if you want to allow that follow following steps:
+1) go to menu
+2) go to VPC network in NETWORKING
+3) to to Firewall rules
+4) open any cluster machine(node) node of yours.  I opened the one with tcp:22
+5) in the Protocols and ports ad another port as tcp:31000 with  tcp:22 after semicolon or if you want to add range then tcp:30000-32767 with  tcp:22 after semicolon
+6) you also need to change Source IP ranges.  if you give 0.0.0.0/0, it will allow traffic from entire world
+
+- Now your nginx service is accessable via all the nodes of the cluster individually at port 31000. 
+- Just to curl http://10.160.0.9:31000/ where "10.160.0.9" could be IP address of any of your nodes.
+- Now if any one node(machine or server you call it) goes down, you cannot access that service via that specific IP address.  So, high availability is not there.
+- To overcome that, we need a Load Balancer and that LB has an IP address that is being shared with all the prod end-users(public).
+- that we can achive via third type of service.  lets create that now.  However, first delete previous service
+- kubectl get services
+- kubectl delete service my-service
+- kubectl get services (your service is not there)
+
+Now copy code from your nodePort.yml file to loadbalancer.yml by following command
+- cp nodePort.yml loadbalancer.yml
+- only change is type.  Change it from type: NodePort to type: LoadBalancer
+- kubectl create -f loadbalancer.yml
+- kubectl get service
+now you could see EXTERNAL-IP is pending.  Thats because Gcloud is accessing your cluster and creating an global IP address. After sometime you could see the ip address
+- you can also access this load balancer from your GCP.  Go to menu, Network Services and then load balancing.
+- Now copy paste the  EXTERNAL-IP address that you got for your service.  That IP address can be accessed globaly. Or FULLY EXPOSED.
+- by taking domain you can name  EXTERNAL-IP to abcwhatever.com
+
+if you are done with your hands-on, you can reduce size of your cluster by following command.  This will help you to save your google credit.
+gcloud container clusters resize cluserter-name --size=0
+if you want to re-create your cluster then use.
+gcloud container clusters resize cluserter-name --size=3
+
+if you run following commands, you could see your pods, deployments services etc are still there. not impacted
+- kubectl get pods
+- kubectl get deployment
+
+Create another service Grafana:
+
+- cp mydeployment.yml grafanadeploy.yml
+- vi grafanadeploy.yml
+- do minor changes as per grafana image(code written)
+
+apiVersion: extensions/v2beta1
+kind: Deployment
+metadata:
+  name: grafana-deployment
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: grafana-app
+    spec:
+      containers:
+      - name: grafana-container
+        image: grafana/grafana
+        ports:
+        - containerPort: 3000
+
+
+- save and come out
+
+
+	
+	
+	

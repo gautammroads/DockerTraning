@@ -1,0 +1,21 @@
+-- Create a GCP ubunut machine and call it Master, or judebox or batiaon or whatever you like it.
+-- Just do apt-get update to get recent packages of OS
+-- Type gcloud on your machine (gcloud is a utility provided by google to access your google cloud account from your ubunutu machine)
+-- To install gcloud run following command
+   - gcloud init  -> choose option (2) and then select y.
+   - This will give you a huge link and copy paste that to same browser where you have opened your GCP and login with your gmail account.  
+   - Press allow and then it will give you authorization token in your gmail login page.
+   - Copy paste that authorizatin token to your command prompt/ubuntu machine.
+ It will say you logged in as your gmail id.
+- Then select your project id that you have created in your GCP.
+- It will ask if you want to configure default region, say yes for now.  
+- It will ask you to select the number of that specific region, check your VM instance in which region it is and then accordingly put that number in your command prompt
+- Your gcloud is set and can access your GCP account.  "gcloud compute instances list" will give you all your machines that created.
+- From here you can control all your machines.  For example, if you want to delete some instances then that can be done via:
+- gcloud compute instances delete your machine-name
+- If you need further commands of gcloud commute, you get get that from google it to get(https://cloud.google.com/sdk/gcloud/reference/container/clusters/create)
+
+- gcloud container clusters create mycluster (NAME-OF-THE-CLUSTER) [If you have already consumed your CPUs for a specific zone.  Then create your Master in a different zone.]
+- by defalut it will create 3 node cluser.  you can increse and decrease it while creating cluster.
+NAME       LOCATION       MASTER_VERSION  MASTER_IP     MACHINE_TYPE   NODE_VERSION    NUM_NODES  STATUS
+mycluster  asia-south1-c  1.13.11-gke.14  34.93.61.215  n1-standard-1  1.13.11-gke.14  3          RUNNING

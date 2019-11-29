@@ -1,0 +1,40 @@
+DEPLOYMENT
+How to create DEPLOYMENT:
+- vi mydeployment.yml  use akms again
+
+-a apiVersion  (two apiversions are used v1 & extensions/v1beta1 majorly used in kubernetes)
+-k kind  (Pod, Service etc)
+-m metadata (metadata will have container details)
+-s spec (container detailed information)
+
+yaml use nested coding for any subfields inside a field.  That starts after two spaces.
+Sample code:
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: x-container
+        image: nginx
+        ports:
+        - containerPort: 80
+
+- we have two spec above.  One spec gives details about the deployment. Second spec gives details about the pod
+- kubectl create -f mydeployment.yml
+- kubectl get deployment - You will get
+NAME            READY   UP-TO-DATE   AVAILABLE   AGE
+my-deployment   5/5     5            5           3m1s
+
+5/5 means current state/desired state
+
+- kubectl describe deployment my-deployment
+- kubectl get pods
+- kubectl get deployment
+All above information you can also get from the dashboard

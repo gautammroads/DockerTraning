@@ -1,0 +1,128 @@
+Installation commands
+
+1) Install SSH
+sudo apt-get install openssh-server
+
+2) Login as a Root User
+sudo su
+
+3) Run an update
+ apt-get update
+
+4) Install Docker and then enable it
+apt install -y docker.io 
+sudo systemctl enable docker 
+
+5) apt-get update && apt-get install -y apt-transport-https
+
+6) curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+7) cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+8) apt-get update
+
+9) apt-get install -y kubelet kubeadm kubectl                 - You can also do version specific installation(apt-get install -y kubelet=1.15.4-00 kubeadm=1.15.4-00 kubectl=1.15.4-00)
+
+10) Next, we will change the configuration file of Kubernetes. Run the following command:
+
+nano /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+
+This will open a text editor, enter the following line after the last
+
+
+“Environment” Variable.
+
+Environment=”cgroup-driver=systemd/cgroup-driver=cgroupfs”
+
+ Press Ctrl+X, then press Y, and then press Enter to 
+
+Run the below commands ONLY on the master node
+11)  kubeadm init --apiserver-advertise-address=<ip-address-of-kmaster-vm> --pod-network-cidr=192.168.0.0/16
+
+12) You will get following commands to run.  Run them as a normal user (only in master)
+  mkdir -p $HOME/.kube
+  
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+13) Save the second command for later and execute that on worker nodes to join the master
+
+kubeadm join 172.31.81.24:6443 --token xoq8rf.rsmij5a41jo349jp \
+    --discovery-token-ca-cert-hash sha256:367de9ffbdba10f633ff5594e62afc3186bb1b350b05e7f411d18e4f8e2810ad
+
+	
+	RUN FOLLOWING COMMANDS AS NORMAL USER on Master
+	
+14) kubectl get pods -o wide --all-namespaces 
+
+15) You will notice from the previous command, all the pods are running except some like kube-dns. For resolving this we will install a pod network. To install the pod network, run the following command:
+kubectl apply -f https://docs.projectcalico.org/v3.9/manifests/calico.yaml
+
+16) watch kubectl get pods --all-namespaces
+
+DELETE ANY EXISTING DASHBOARD INSTALLATIONS AND RELATED SETTINGS
+kubectl get secret,sa,role,rolebinding,services,deployments --namespace=kube-system | grep dashboard
+
+kubectl delete deployment kubernetes-dashboard --namespace=kube-system 
+kubectl delete service kubernetes-dashboard  --namespace=kube-system 
+kubectl delete role kubernetes-dashboard-minimal --namespace=kube-system 
+kubectl delete rolebinding kubernetes-dashboard-minimal --namespace=kube-system
+kubectl delete sa kubernetes-dashboard --namespace=kube-system 
+kubectl delete secret kubernetes-dashboard-certs --namespace=kube-system
+kubectl delete secret kubernetes-dashboard-key-holder --namespace=kube-system
+
+
+
+
+17) Next, we will install the dashboard. To install the Dashboard, run the following command:
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
+
+
+18) Check if dashboard is running or not
+
+watch kubectl get pods --all-namespaces
+
+19) 
+
+18) By default dashboard will not be visible on the Master VM. Run the following command in the command line by :
+Kubectl proxy
+
+19) To view the dashboard in the browser, navigate to the following address in the browser of your Master VM.
+
+ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+
+ You will be prompted with dashboard page, to enter the credentials. Now by running commands mentioned in next step, we will get all token for the dashboard
+
+20) 
+
+Creating admin user to access Kubernetes dashboard
+
+https://medium.com/@kanrangsan/creating-admin-user-to-access-kubernetes-dashboard-723d6c9764e4
+
+21) You have successfully logged in to your dashboard!
+
+22) Run following command on your master to check the status of nodes:
+
+      kubectl get nodes
+
+23) It is time to join your node to the cluster! This is probably the only step that you will be doing on the node, 
+after installing kubernetes on it. Run the join command that you saved, when you ran kubeadm init command on the master. Note: Run this command with “sudo”.
+
+24) Run following command again on your master to check the status of the cluster:
+
+    kubectl get nodes
+
+Your Kubernetes Cluster is now ready! With a Master and a Node :-)
+
+
+    
+    
+
+
+
+

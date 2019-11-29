@@ -1,0 +1,35 @@
+- Now time to install kubectl
+ - go to link https://kubernetes.io/docs/tasks/tools/install-kubectl/ and
+   run following command one by one
+   sudo apt-get update && sudo apt-get install -y apt-transport-https
+   curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+   echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+   sudo apt-get update
+   sudo apt-get install -y kubectl
+ OR  create a shell file and execute that.
+  - create a file called kubectl-install.sh by running vi kubectl-install.sh and copy paste all above commands.  Save and come out
+  - chmod +x kubectl-install.sh  (Create Binary file)
+  - bash kubectl-install.sh (Execute Binary file)
+Once installation is done, check your nodes via following commands.
+
+- kubectl get nodes
+- Now you could see kubectl can interact with your machines.  How that is happening???  That is happening by a config file present in the .kube directory.
+- Now run "ls -al"  
+- You could see .kube file is being created.("ls -al" .* shows the contents of all directories in the current directory whose names begin with . (ie all those matching the shell glob .*)
+- Kubectl able to connect to all your machines(cluster).  How that happened?  
+- Just do cd .kube/ and then ls and then vim config.  
+- You could see that this config file has all the information(token, ip address etc) and how that Master Node is connected to all your machines.  gcloud take cares of that management of clusters as Kubernetes is being provided as a service by Google.
+- if you rename this config file( mv config to otherfile), your "kubectl get nodes" command will stop working.
+- That Means kubectl takes configuration information from the config file.  Now rename is back to config by command( mv otherfile config)
+
+
+
+Now lets say you want to connect your SAME cluster via another kubectl.  In that case repeat the previous processes for kubectl installation.
+- if you run "ls -al";  .kube folder will not be there.  As it has not gone thru an authentication channel that haapened for the first Master machine.
+- Now if you run kubectl get nodes it will not run.  So, we want to connect our previous cluster via this new machine.  So, for that
+  go to your web page of your kubernetes engine/cluster, there you will get "connect button".  From there you will get following command
+gcloud container clusters get-credentials mycluster --zone asia-south1-c --project festive-cistern-257017
+- run this command.  Your new machine will also be connected to your cluster.
+- now if you run  run "ls -al";  .kube folder will not be there.
+- if you want to delete the machine that you added later, command for that is,
+- gcloud compute instances delete name-of-the-machine
