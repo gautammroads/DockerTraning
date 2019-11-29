@@ -1,0 +1,28 @@
+Share excercise 10, 11
+
+https://www.digitalocean.com/community/tutorials/an-introduction-to-helm-the-package-manager-for-kubernetes - helm reading
+https://devopscube.com/install-configure-helm-kubernetes/
+
+
+
+
+You can fetch that script, and then execute it locally. It’s well documented so that you can read through it and understand what it is doing before you run it.
+
+$ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
+
+GIT Isntallation:
+    sudo apt-get update
+    sudo apt-get install git
+    git --version
+
+https://helm.sh/docs/intro/install/
+
+
+
+come out from folder testapi-chart and then run following command.
+helm package testapi-chart --debug
+
+
+
